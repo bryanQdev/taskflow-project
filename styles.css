@@ -1,25 +1,32 @@
 /*VARIABLES GLOBALES*/
 :root{
-    --color-bg:#f4f6f9;
+    --color-bg:#f0f2f5;
+    --color-surface: #ffffff;
     --color-primary:#4f46e5;
-    --color-high:#ef4444;
+    --color-primary-hover:#4338ca;
+    --color-high: #ef4444;
     --color-medium:#f59e0b;
     --color-low:#10b981;
     --color-white: #ffffff;
+    --color-text: #1f2937;
+    --color-border: #e5e7eb;
     --spacing: 16px;
     --radius: 10px;
-    --transition: 0.3s ease;
-    --font-main:Arial, sans-serif;
+    --transition: 0.2s ease;
+    --font-main: system-ui, -apple-system, sans-serif;
 
 }
 
 body{
     background-color: var(--color-bg);
     font-family: var(--font-main);
+    color: var(--color-text);
     margin: 0;
+    width: 100%;
 
 }
 
+/*---------HEADER--------*/
 header{
     background-color: var(--color-primary);
     color: white;
@@ -27,24 +34,128 @@ header{
     text-align: center;
 }
 
+
+/*---------LAYOUT--------*/
 .container{
     display: flex;
+    min-height:calc(100vh- 57px);
 }
 
 
 /*sidebar*/
 aside{
-    width: 250px;
-    background-color: white;
-    padding: var(--spacing);
+    width: 220px;
+    background-color: var(--color-white);
+    border-right: 1px solid var(--color-border);
+    padding: 24px var(--spacing);
 
 }
 
 /*Main*/
 main{
     flex: 1;
-    padding: var(--spacing);
+    padding: 24px;
 
+}
+
+
+/*----SECCION CREAR TAREA----*/
+
+.crear-deberes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--spacing);
+    margin-bottom: 24px;
+}
+
+.crear-deberes input {
+    background: var(--color-bg);
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-size: 0.875rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+
+.crear-deberes input:focus{
+    border-color: valor(--color-primary);
+    background: var(--color-white);
+}
+
+.crear-deberes input::placeholder{
+    color: var(--color-muted);
+}
+
+#taskInput{
+    flex:1;
+    min-width:180px;
+}
+
+#searchInput{
+    
+    min-width: 180px;
+}
+
+
+/*-------BOTONES DE PRIORIDAD------*/
+#prioridad-btn{
+    display: flex;
+    gap: 6px;
+}
+
+.prioridad-btn{
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: var(--color-muted);
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+
+.prioridad-btn:hover{
+    border-color: var(--color-primary);
+    color: var(--color-text);
+
+}
+
+.prioridad-btn.activo {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+
+}
+
+
+/***---BOTON AÑADIR----***/
+
+#addTaskBtn{
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#addTaskBtn:hover{
+    background: var(--color-primary-hover);
 }
 
 /*Lista de deberes*/
@@ -58,7 +169,18 @@ main{
     margin-bottom: var(--spacing);
     border-radius: var(--radius);
     transition: var(--transition);
-    ;
+    
+}
+
+.deberes {
+    background: var(--color-white);
+    padding: var(--spacing);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    transition: var(--transition)   ;
 }
 
 /*Hover*/
@@ -73,19 +195,40 @@ main{
 .prioridad{
     padding:5px 10px;
     border-radius: 20px;
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 12px;
 }
 
 
-.alta{
+.prioridad.alta{
     background-color: var(--color-high);
 }
-.medium{
+.prioridad.media{
     background-color: var(--color-medium);
 }
-.low{
+.prioridad.baja{
     background-color: var(--color-low);
+}
+
+
+/*---BOTON ELIMINAR----*/
+.deleteBtn{
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--color-muted);
+    font-family: var(--font-main);
+    font-size:0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+
+}
+
+.deleteBtn:hover{
+    background: rgba(239,68,68,0.1);
+    border-color: var(--color-high);
+    color: var(--color-high);
 }
 
 
@@ -97,5 +240,12 @@ main{
     
     aside{
         width:100%;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+
+    }
+
+    #searchInput{
+        width: 100%;
     }
 }

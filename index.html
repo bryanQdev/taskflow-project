@@ -1,73 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi app</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-     
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Mi app</h1>
+      <h1>Mi app</h1>
     </header>
 
     <div class="container">
-        <aside>
-            <h2>Categorías</h2>
-            <ul>
-                <li>Trabajo</li>
-                <li>Estudio</li>
-                <li>Personal</li>
-            </ul>
+      <aside>
+        <h2>Categorías</h2>
+        <ul>
+          <li>Trabajo</li>
+          <li>Estudio</li>
+          <li>Personal</li>
+        </ul>
+      </aside>
 
-        </aside>
+      <main>
+        <section class="crear-deberes">
+          <!-- Agregamos un input para escribir tareas -->
+          <label for="taskInput">Nueva tarea</label>
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Escribe tu tarea aquí..."
+          />
 
-        <main>
-            <section class="crear-deberes">
+          <!-- Agregamos un input para buscar tareas -->
+          <label for="searchInput">Buscar tarea</label>
+          <input type="text" id="searchInput" placeholder="Buscar tarea..." />
 
-                <!-- Agregamos un input para escribir tareas -->
-                 <label for="taskInput">Nueva tarea</label> 
-                <input type="text" id="taskInput" placeholder="Escribe tu tarea aquí...">
+          <div id="prioridad-btn">
+            <button class="prioridad-btn" data-prioridad="alta">alta</button>
+            <button class="prioridad-btn" data-prioridad="media">media</button>
+            <button class="prioridad-btn" data-prioridad="baja">baja</button>
+          </div>
+          <button id="addTaskBtn">Añadir</button>
+        </section>
 
-                <!-- Agregamos un input para buscar tareas -->
-                 <label for="searchInput">Buscar tarea</label>
-                <input type="text" id="searchInput" placeholder="Buscar tarea..."> 
-
-                <div id="prioridad-btn">
-                    <button class="prioridad-btn" data-prioridad="alta">alta</button>
-                    <button class="prioridad-btn" data-prioridad="media">media</button>
-                    <button class="prioridad-btn" data-prioridad="baja">baja</button>
-
-                </div>
-                <button id="addTaskBtn">Añadir</button>
-            </section>
-            
-            <section class="lista-de-deberes" id="taskList">
-
-            </section>
-
-            
-        </main>
+        <section class="lista-de-deberes" id="taskList"></section>
+      </main>
     </div>
-
 
     <!-- PIE DE PAGINA-->
     <footer>
-        <p>
-            MI app de tareas-2026   
-        </p>
-
+      <p>MI app de tareas-2026</p>
     </footer>
     <template id="tarea-template">
-        <div class="deberes">
-            <h2 class="tarea-texto"></h2>
-            <span class="categoria">General</span>
-            <span class="prioridad"></span>
-            <button class="deleteBtn">Eliminar</button>
-        </div>
+      <div class="deberes">
+        <h2 class="tarea-texto"></h2>
+        <span class="categoria">General</span>
+        <span class="prioridad"></span>
+        <button class="deleteBtn">Eliminar</button>
+      </div>
     </template>
     <script src="app.js"></script>
-
-</body>
+  </body>
 </html>

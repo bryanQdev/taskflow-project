@@ -92,26 +92,26 @@ function addTask(){
 
     //Crear una tarea en el HTML
     function renderTask(text, prioridad){
-        const tareaElemento = document.createElement("div");
+        const template = document.getElementById("tarea-template");
 
-        tareaElemento.classList.add("deberes");
+        const clone = template.content.cloneNode(true);
 
-        tareaElemento.innerHTML = `
-        <h2>${text}</h2>
-        
-        <span class="prioridad ${prioridad}">${prioridad}</span>
-        <button class= "deleteBtn">Eliminar</button>
-        `;
+        clone.querySelector(".tarea-texto").textContent = text;
+        clone.querySelector(".prioridad").textContent = prioridad;
+        clone.querySelector(".prioridad").classList.add(prioridad);
 
-        const deleteBtn = tareaElemento.querySelector(".deleteBtn");
 
+        const tareaElemento = clone.querySelector(".deberes");
+
+        const deleteBtn = clone.querySelector(".deleteBtn");
         deleteBtn.addEventListener("click", function(){
             tareaElemento.remove();
-
             removeTaskFromArray(text);
-
         });
-        taskList.appendChild(tareaElemento)
+
+        taskList.appendChild(clone);
+
+       
 
     }
 

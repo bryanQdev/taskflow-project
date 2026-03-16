@@ -6,34 +6,41 @@ const prioridadBtns = document.querySelectorAll(".prioridad-btn");
 const searchInput = document.getElementById("searchInput");
 
 
+/**
+ * @typedef {Object} Tarea
+ * @property {string} text - Texto descriptivo de la tarea.
+ * @property {string} prioridad - Nivel de prioridad asignado a la tarea
+ *                                (por ejemplo: "baja", "media" o "alta").
+ */
+
+/** @type {Tarea[]} */
 let tareas = [];
 let prioridadSeleccionada = "media"; //Valor por defecto
 
 
-//Cada vez que el usuario escribe, filtramos.
+//Cada vez que el usuario escribe, filtramos.   
 
 searchInput.addEventListener("input", filterTask);
-function filterTask(){
-    //Tomamos el texto escrito en minuscula
-    const searchText= searchInput.value.toLowerCase();
 
-    //Tomamos todas las tareas del DOM
-    const todasLasTareas = taskList.querySelectorAll(".deberes");
+/**
+ * Filtra las tareas visibles en la lista según el texto introducido
+ * en el campo de búsqueda, mostrando solo las que coinciden parcial
+ * o totalmente con el término buscado.
+ */
+function filterTask() {
+    const searchText = searchInput.value.trim().toLowerCase();
+    const tareasDOM = taskList.querySelectorAll(".deberes");
 
-    //Recorremos cada tarea y verificamos si el texto de la tarea incluye el texto de busqueda
-    todasLasTareas.forEach(function(tarea){
-        //Tomamos el texto  del h2 de esa tarea en minuscula
-        const textoTarea = tarea.querySelector("h2").textContent.toLowerCase();
-        
-        //Si el texto de la tarea incluye el texto de lo que se buscò, lo mostramos
-            if(textoTarea.includes(searchText)){
-                tarea.style.display= "flex";
-            } else{
-                //Si no, lo ocultamos
-                tarea.style.display = "none";
-            }
-        } );
-    };
+    tareasDOM.forEach((tarea) => {
+        const tituloTarea = tarea.querySelector("h2");
+        if (!tituloTarea) return;
+
+        const textoTarea = tituloTarea.textContent.trim().toLowerCase();
+        const contieneBusqueda = textoTarea.includes(searchText);
+
+        tarea.style.display = contieneBusqueda ? "flex" : "none";
+    });
+}
 
 
 
@@ -60,12 +67,30 @@ prioridadBtns.forEach(function(btn){
 //Agregamos el evento al boton añadir tarea
 
 button.addEventListener("click", addTask);
+/**
+ * Crea una nueva tarea a partir del texto del input,
+ * la agrega al arreglo en memoria, la persiste en localStorage
+ * y la renderiza en la lista del DOM.
+*/
+
+// Validamos la longitud del texto antes de crear la tarea
+function validarLongitudTarea(texto) {
+    return texto.trim().length >= 3;
+}
+
+// Modificamos addTask para mostrar/ocultar el mensaje de error
 function addTask(){
     const text = input.value;
-    if(text.trim()==="") return;
+    const mensajeError = document.getElementById("mensaje-error-longitud");
+
+    if(!validarLongitudTarea(text)){
+        if(mensajeError) mensajeError.style.display = "block";
+        return;
+    } else {
+        if(mensajeError) mensajeError.style.display = "none";
+    }
 
     const tarea = {text: text, prioridad:prioridadSeleccionada};
-
 
     tareas.push(tarea);
 
@@ -74,8 +99,11 @@ function addTask(){
     renderTask(text,prioridadSeleccionada);
 
     input.value = "";
-
 }
+
+
+
+
     
 
     
@@ -91,6 +119,13 @@ function addTask(){
     }
 
     //Crear una tarea en el HTML
+    /**
+     * Renderiza una tarea en la lista del DOM utilizando el template HTML,
+     * configurando su texto, prioridad y el comportamiento del botón de borrado.
+     *
+     * @param {string} text - Texto descriptivo de la tarea.
+     * @param {string} prioridad - Nivel de prioridad asociado a la tarea.
+     */
     function renderTask(text, prioridad){
         const template = document.getElementById("tarea-template");
 
@@ -114,8 +149,14 @@ function addTask(){
        
 
     }
+    
 
-
+    /**
+     * Elimina del arreglo de tareas la tarea cuyo texto coincide con el
+     * proporcionado y actualiza la información persistida en localStorage.
+     *
+     * @param {string} text - Texto de la tarea a eliminar.
+     */
     function removeTaskFromArray(text){
 
         tareas = tareas.filter(function(task){
@@ -125,5 +166,23 @@ function addTask(){
         localStorage.setItem("tareas",JSON.stringify(tareas));
     }
 
+
+
+//Funciòn que obtiene todas las tareas del localStorage
+/**
+ * Obtiene el arreglo de tareas persistido en localStorage y lo
+ * devuelve como una lista tipada de objetos `Tarea`.
+ *
+ * @returns {Tarea[]} Lista de tareas almacenadas o un arreglo vacío si no hay datos.
+ */
+function getTasksFromLocalStorage(){
+    const storedTasks = localStorage.getItem("tareas");
+    if(storedTasks){
+        /** @type {Tarea[]} */
+        const parsed = JSON.parse(storedTasks);
+        return parsed;
+    }
+    return [];
+}
 
 

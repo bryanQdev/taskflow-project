@@ -29,11 +29,17 @@
             type="text"
             id="taskInput"
             placeholder="Escribe tu tarea aquí..."
+            
           />
+          <p id="mensaje-error-longitud" style="display:none; color:red; font-size:0.8em;">
+            La tarea debe tener al menos 3 caracteres.
+          </p>
+          
 
           <!-- Agregamos un input para buscar tareas -->
           <label for="searchInput">Buscar tarea</label>
           <input type="text" id="searchInput" placeholder="Buscar tarea..." />
+          
 
           <div id="prioridad-btn">
             <button class="prioridad-btn" data-prioridad="alta">alta</button>

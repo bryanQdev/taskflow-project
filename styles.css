@@ -262,3 +262,12 @@ footer{
     border: 1px solid var(--color-border);
     border-top: 1px solid var(--color-border);
 }
+
+
+#mensaje-error-longitud {
+    width: 100%;
+    margin: 0;
+    padding: 0 4px;
+    font-size: 0.8rem;
+    color: var(--color-high);
+}

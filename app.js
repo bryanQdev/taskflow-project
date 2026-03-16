@@ -46,21 +46,11 @@ function filterTask() {
 
 
 //Agregamos eventos a los botones de prioridad
-prioridadBtns.forEach(function(btn){
-    btn.addEventListener("click", function(){
-
-        //Removemos "activo" de todos los botones
-
-        prioridadBtns.forEach(function(b){
-            b.classList.remove("activo");
-        });
-
-        //Agregamos "activo" al botón seleccionado
+prioridadBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        prioridadBtns.forEach(b => b.classList.remove("activo"));
         btn.classList.add("activo");
-        
-        //Se lo damos al que seleccionamos
-
-        prioridadSeleccionada= btn.dataset.prioridad;
+        prioridadSeleccionada = btn.dataset.prioridad;
     });
 });
 
@@ -147,7 +137,6 @@ function addTask(){
 
        
 
-   // }
     
 
     /**

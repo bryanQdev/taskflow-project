@@ -4,6 +4,7 @@ const button = document.getElementById("addTaskBtn")
 const taskList = document.getElementById("taskList");
 const prioridadBtns = document.querySelectorAll(".prioridad-btn");
 const searchInput = document.getElementById("searchInput");
+const template = document.getElementById("tarea-template");
 
 
 /**
@@ -127,14 +128,11 @@ function addTask(){
      * @param {string} prioridad - Nivel de prioridad asociado a la tarea.
      */
     function renderTask(text, prioridad){
-        const template = document.getElementById("tarea-template");
-
         const clone = template.content.cloneNode(true);
 
         clone.querySelector(".tarea-texto").textContent = text;
         clone.querySelector(".prioridad").textContent = prioridad;
         clone.querySelector(".prioridad").classList.add(prioridad);
-
 
         const tareaElemento = clone.querySelector(".deberes");
 
@@ -145,10 +143,11 @@ function addTask(){
         });
 
         taskList.appendChild(clone);
+    }
 
        
 
-    }
+   // }
     
 
     /**

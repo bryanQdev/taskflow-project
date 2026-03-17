@@ -59,17 +59,27 @@ prioridadBtns.forEach(btn => {
 
 button.addEventListener("click", addTask);
 /**
- * Crea una nueva tarea a partir del texto del input,
- * la agrega al arreglo en memoria, la persiste en localStorage
- * y la renderiza en la lista del DOM.
-*/
+ * Crea una nueva tarea a partir del input, valida longitud, actualiza el estado
+ * en memoria, persiste en localStorage y renderiza en el DOM.
+ *
+ * @returns {void}
+ */
 
-// Validamos la longitud del texto antes de crear la tarea
+/**
+ * Valida que el texto de la tarea tenga una longitud mínima.
+ *
+ * @param {string} texto Texto ingresado por el usuario.
+ * @returns {boolean} `true` si cumple la longitud mínima; si no, `false`.
+ */
 function validarLongitudTarea(texto) {
     return texto.trim().length >= 3;
 }
 
-// Modificamos addTask para mostrar/ocultar el mensaje de error
+/**
+ * Crea la tarea leyendo el input y muestra/oculta el mensaje de error de longitud.
+ *
+ * @returns {void}
+ */
 function addTask(){
     const text = input.value;
     const mensajeError = document.getElementById("mensaje-error-longitud");
@@ -99,17 +109,24 @@ function addTask(){
 
     
 //Cargar tareas desde localStorage al iniciar la aplicación
-    function loadTasksFromStorage() {
-        const storedTasks = localStorage.getItem("tareas");
-        if (storedTasks) {
-            tareas = JSON.parse(storedTasks);
-            tareas.forEach(function(task) {
-                renderTask(task.text, task.prioridad); //Prioridad por defecto al cargar tareas
-            });
-        }
+/**
+ * Carga las tareas desde localStorage y las renderiza al iniciar la app.
+ *
+ * @returns {void}
+ */
+function loadTasksFromStorage() {
+    const storedTasks = localStorage.getItem("tareas");
+    if (storedTasks) {
+        /** @type {Tarea[]} */
+        const parsed = JSON.parse(storedTasks);
+        tareas = parsed;
+        tareas.forEach((task) => {
+            renderTask(task.text, task.prioridad);
+        });
     }
+}
 
-    loadTasksFromStorage();
+loadTasksFromStorage();
 
     //Crear una tarea en el HTML
     /**
@@ -118,6 +135,7 @@ function addTask(){
      *
      * @param {string} text - Texto descriptivo de la tarea.
      * @param {string} prioridad - Nivel de prioridad asociado a la tarea.
+     * @returns {void}
      */
     function renderTask(text, prioridad){
         const clone = template.content.cloneNode(true);
@@ -146,6 +164,7 @@ function addTask(){
      * proporcionado y actualiza la información persistida en localStorage.
      *
      * @param {string} text - Texto de la tarea a eliminar.
+     * @returns {void}
      */
     const removeTaskFromArray = (text) => {
         tareas = tareas.filter(task => task.text !== text);
@@ -154,14 +173,14 @@ function addTask(){
 
 
 
-//Funciòn que obtiene todas las tareas del localStorage
+//Función que obtiene todas las tareas del localStorage
 /**
  * Obtiene el arreglo de tareas persistido en localStorage y lo
  * devuelve como una lista tipada de objetos `Tarea`.
  *
  * @returns {Tarea[]} Lista de tareas almacenadas o un arreglo vacío si no hay datos.
  */
-function getTasksFromLocalStorage(){
+function getTasksFromLocalStorage() {
     const storedTasks = localStorage.getItem("tareas");
     if(storedTasks){
         /** @type {Tarea[]} */

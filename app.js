@@ -145,14 +145,10 @@ function addTask(){
      *
      * @param {string} text - Texto de la tarea a eliminar.
      */
-    function removeTaskFromArray(text){
-
-        tareas = tareas.filter(function(task){
-            return task.text !== text;
-        });
-
-        localStorage.setItem("tareas",JSON.stringify(tareas));
-    }
+    const removeTaskFromArray = (text) => {
+        tareas = tareas.filter(task => task.text !== text);
+        localStorage.setItem("tareas", JSON.stringify(tareas));
+    };
 
 
 

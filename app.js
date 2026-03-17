@@ -9,6 +9,7 @@ const template = document.getElementById("tarea-template");
 
 /**
  * @typedef {Object} Tarea
+ * @property {string} id - Identificador único de la tarea.
  * @property {string} text - Texto descriptivo de la tarea.
  * @property {string} prioridad - Nivel de prioridad asignado a la tarea
  *                                (por ejemplo: "baja", "media" o "alta").
@@ -17,6 +18,30 @@ const template = document.getElementById("tarea-template");
 /** @type {Tarea[]} */
 let tareas = [];
 let prioridadSeleccionada = "media"; //Valor por defecto
+
+/**
+ * Persiste el arreglo `tareas` en localStorage.
+ *
+ * @returns {void}
+ */
+function saveTasksToStorage() {
+    localStorage.setItem("tareas", JSON.stringify(tareas));
+}
+
+/**
+ * Normaliza tareas cargadas (por ejemplo, versiones antiguas sin `id`).
+ *
+ * @param {any} task
+ * @returns {Tarea}
+ */
+function normalizeTask(task) {
+    const id = typeof task?.id === "string" && task.id.trim() ? task.id : crypto.randomUUID();
+    return {
+        id,
+        text: String(task?.text ?? ""),
+        prioridad: String(task?.prioridad ?? "media"),
+    };
+}
 
 
 //Cada vez que el usuario escribe, filtramos.   
@@ -52,6 +77,11 @@ prioridadBtns.forEach(btn => {
         btn.classList.add("activo");
         prioridadSeleccionada = btn.dataset.prioridad;
     });
+});
+
+// Marcamos la prioridad por defecto ("media") en la UI
+prioridadBtns.forEach((btn) => {
+    if (btn.dataset.prioridad === prioridadSeleccionada) btn.classList.add("activo");
 });
 
 
@@ -91,13 +121,14 @@ function addTask(){
         if(mensajeError) mensajeError.style.display = "none";
     }
 
-    const tarea = {text: text, prioridad:prioridadSeleccionada};
+    /** @type {Tarea} */
+    const tarea = { id: crypto.randomUUID(), text: text, prioridad: prioridadSeleccionada };
 
     tareas.push(tarea);
 
-    localStorage.setItem("tareas", JSON.stringify(tareas));
+    saveTasksToStorage();
 
-    renderTask(text,prioridadSeleccionada);
+    renderTask(tarea);
 
     input.value = "";
 }
@@ -116,13 +147,23 @@ function addTask(){
  */
 function loadTasksFromStorage() {
     const storedTasks = localStorage.getItem("tareas");
-    if (storedTasks) {
-        /** @type {Tarea[]} */
+    if (!storedTasks) return;
+
+    try {
         const parsed = JSON.parse(storedTasks);
-        tareas = parsed;
+        if (!Array.isArray(parsed)) throw new Error("Formato inválido");
+
+        /** @type {Tarea[]} */
+        const normalized = parsed.map(normalizeTask);
+        tareas = normalized;
+        saveTasksToStorage(); // actualiza storage si faltaban ids
+
         tareas.forEach((task) => {
-            renderTask(task.text, task.prioridad);
+            renderTask(task);
         });
+    } catch {
+        tareas = [];
+        saveTasksToStorage();
     }
 }
 
@@ -133,23 +174,23 @@ loadTasksFromStorage();
      * Renderiza una tarea en la lista del DOM utilizando el template HTML,
      * configurando su texto, prioridad y el comportamiento del botón de borrado.
      *
-     * @param {string} text - Texto descriptivo de la tarea.
-     * @param {string} prioridad - Nivel de prioridad asociado a la tarea.
+     * @param {Tarea} tarea - Tarea a renderizar.
      * @returns {void}
      */
-    function renderTask(text, prioridad){
+    function renderTask(tarea){
         const clone = template.content.cloneNode(true);
 
-        clone.querySelector(".tarea-texto").textContent = text;
-        clone.querySelector(".prioridad").textContent = prioridad;
-        clone.querySelector(".prioridad").classList.add(prioridad);
+        clone.querySelector(".tarea-texto").textContent = tarea.text;
+        clone.querySelector(".prioridad").textContent = tarea.prioridad;
+        clone.querySelector(".prioridad").classList.add(tarea.prioridad);
 
         const tareaElemento = clone.querySelector(".deberes");
+        tareaElemento.dataset.id = tarea.id;
 
         const deleteBtn = clone.querySelector(".deleteBtn");
         deleteBtn.addEventListener("click", function(){
             tareaElemento.remove();
-            removeTaskFromArray(text);
+            removeTaskFromArray(tarea.id);
         });
 
         taskList.appendChild(clone);
@@ -163,12 +204,12 @@ loadTasksFromStorage();
      * Elimina del arreglo de tareas la tarea cuyo texto coincide con el
      * proporcionado y actualiza la información persistida en localStorage.
      *
-     * @param {string} text - Texto de la tarea a eliminar.
+     * @param {string} id - Id de la tarea a eliminar.
      * @returns {void}
      */
-    const removeTaskFromArray = (text) => {
-        tareas = tareas.filter(task => task.text !== text);
-        localStorage.setItem("tareas", JSON.stringify(tareas));
+    const removeTaskFromArray = (id) => {
+        tareas = tareas.filter(task => task.id !== id);
+        saveTasksToStorage();
     };
 
 
@@ -182,12 +223,15 @@ loadTasksFromStorage();
  */
 function getTasksFromLocalStorage() {
     const storedTasks = localStorage.getItem("tareas");
-    if(storedTasks){
-        /** @type {Tarea[]} */
+    if (!storedTasks) return [];
+
+    try {
         const parsed = JSON.parse(storedTasks);
-        return parsed;
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map(normalizeTask);
+    } catch {
+        return [];
     }
-    return [];
 }
 
 

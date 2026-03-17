@@ -99,15 +99,17 @@ function addTask(){
 
     
 //Cargar tareas desde localStorage al iniciar la aplicación
-    const storedTasks = localStorage.getItem("tareas");
-    if(storedTasks){
-        tareas = JSON.parse(storedTasks);
-        tareas.forEach(function(task){
-
-            renderTask(task.text, task.prioridad); //Prioridad por defecto al cargar tareas
-            
-        });
+    function loadTasksFromStorage() {
+        const storedTasks = localStorage.getItem("tareas");
+        if (storedTasks) {
+            tareas = JSON.parse(storedTasks);
+            tareas.forEach(function(task) {
+                renderTask(task.text, task.prioridad); //Prioridad por defecto al cargar tareas
+            });
+        }
     }
+
+    loadTasksFromStorage();
 
     //Crear una tarea en el HTML
     /**

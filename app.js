@@ -168,6 +168,7 @@ function addTask(){
     renderTask(tarea);         // 3. Mostrar en el DOM
 
     input.value = "";          // Opcional pero recomendable: limpiar el input
+    updateStats();             // 4. Actualizar estadísticas
 }
 
 
@@ -198,6 +199,7 @@ function loadTasksFromStorage() {
         tareas.forEach((task) => {
             renderTask(task);
         });
+        updateStats(); // Actualizar estadísticas tras cargar tareas
     } catch {
         tareas = [];
         saveTasksToStorage();
@@ -223,8 +225,10 @@ loadTasksFromStorage();
 
         const tareaElemento = clone.querySelector(".deberes");
         tareaElemento.dataset.id = tarea.id;
+        if (tarea.completed) tareaElemento.classList.add("completada"); 
 
-        const toggleBtn = clone.querySelector(".completeBtn"); // ✅ coincide con el HTML
+
+        const toggleBtn = clone.querySelector(".completeBtn"); 
 toggleBtn.addEventListener("click", function () {
     toggleTask(tarea.id, tareaElemento);
 });
@@ -259,6 +263,7 @@ function toggleTask(id, tareaElemento) {
     tareaElemento.classList.toggle("completada", tarea.completed);
     saveTasksToStorage();
     applyFilter();
+    updateStats();
 }
 /**
  * Permite editar el título de una tarea existente.
@@ -300,6 +305,7 @@ function editTask(id, tareaElemento) {
         nuevoH2.classList.add("tarea-texto");
         nuevoH2.textContent = nuevoTexto;
         inputEdicion.replaceWith(nuevoH2);
+        updateStats();
     }
 
     // Confirmamos al perder el foco o al pulsar Enter
@@ -330,30 +336,25 @@ function editTask(id, tareaElemento) {
     const removeTaskFromArray = (id) => {
         tareas = tareas.filter(task => task.id !== id);
         saveTasksToStorage();
+        updateStats();
     };
 
 
 
-//Función que obtiene todas las tareas del localStorage
+
 /**
- * Obtiene el arreglo de tareas persistido en localStorage y lo
- * devuelve como una lista tipada de objetos `Tarea`.
+ * Actualiza el panel de estadísticas con los datos actuales del array tareas.
  *
- * @returns {Tarea[]} Lista de tareas almacenadas o un arreglo vacío si no hay datos.
+ * @returns {void}
  */
-function getTasksFromLocalStorage() {
-    const storedTasks = localStorage.getItem("tareas");
-    if (!storedTasks) return [];
+function updateStats() {
+    const total = tareas.length;
+    const completadas = tareas.filter(t => t.completed).length;
+    const pendientes = total - completadas;
 
-    try {
-        const parsed = JSON.parse(storedTasks);
-        if (!Array.isArray(parsed)) return [];
-        return parsed.map(normalizeTask);
-    } catch {
-        return [];
-    }
-
-    
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-pendientes").textContent = pendientes;
+    document.getElementById("stat-completadas").textContent = completadas;
 }
 
 /**
@@ -369,6 +370,7 @@ function completeAllTasks() {
     });
     saveTasksToStorage();
     applyFilter();
+    updateStats();
 }
 
 document.getElementById("completeAllBtn").addEventListener("click", completeAllTasks);
@@ -389,6 +391,7 @@ function deleteCompletedTasks() {
 
     tareas = tareas.filter(tarea => !tarea.completed);
     saveTasksToStorage();
+    updateStats();
 }
 
 document.getElementById("deleteCompletedBtn").addEventListener("click", deleteCompletedTasks);

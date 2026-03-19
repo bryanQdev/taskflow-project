@@ -229,6 +229,11 @@ toggleBtn.addEventListener("click", function () {
     toggleTask(tarea.id, tareaElemento);
 });
 
+const editBtn = clone.querySelector(".editBtn");
+    editBtn.addEventListener("click", () => {
+        editTask(tarea.id, tareaElemento);
+    });
+
         const deleteBtn = clone.querySelector(".deleteBtn");
         deleteBtn.addEventListener("click", function(){
             tareaElemento.remove();
@@ -255,6 +260,62 @@ function toggleTask(id, tareaElemento) {
     saveTasksToStorage();
     applyFilter();
 }
+/**
+ * Permite editar el título de una tarea existente.
+ * Reemplaza el h2 por un input, y al confirmar actualiza
+ * el array, el DOM y el localStorage.
+ *
+ * @param {string} id - Id de la tarea a editar.
+ * @param {HTMLElement} tareaElemento - Elemento del DOM que representa la tarea.
+ * @returns {void}
+ */
+function editTask(id, tareaElemento) {
+    const tarea = tareas.find(task => task.id === id);
+    if (!tarea) return;
+
+    const h2 = tareaElemento.querySelector(".tarea-texto");
+    const textoActual = tarea.text;
+
+    // Reemplazamos el h2 por un input
+    const inputEdicion = document.createElement("input");
+    inputEdicion.type = "text";
+    inputEdicion.value = textoActual;
+    inputEdicion.classList.add("input-edicion");
+    h2.replaceWith(inputEdicion);
+    inputEdicion.focus();
+
+    // Función que confirma el cambio
+    function confirmarEdicion() {
+        const nuevoTexto = inputEdicion.value.trim();
+
+        if (nuevoTexto.length < 3) {
+            inputEdicion.classList.add("input-edicion--error");
+            return;
+        }
+
+        tarea.text = nuevoTexto;
+        saveTasksToStorage();
+
+        const nuevoH2 = document.createElement("h2");
+        nuevoH2.classList.add("tarea-texto");
+        nuevoH2.textContent = nuevoTexto;
+        inputEdicion.replaceWith(nuevoH2);
+    }
+
+    // Confirmamos al perder el foco o al pulsar Enter
+    inputEdicion.addEventListener("blur", confirmarEdicion);
+    inputEdicion.addEventListener("keydown", e => {
+        if (e.key === "Enter") inputEdicion.blur();
+        if (e.key === "Escape") {
+            const nuevoH2 = document.createElement("h2");
+            nuevoH2.classList.add("tarea-texto");
+            nuevoH2.textContent = textoActual;
+            inputEdicion.replaceWith(nuevoH2);
+        }
+    });
+}
+
+
        
 
     
@@ -291,6 +352,24 @@ function getTasksFromLocalStorage() {
     } catch {
         return [];
     }
+
+    
 }
 
+/**
+ * Marca todas las tareas como completadas, actualiza el DOM y localStorage.
+ *
+ * @returns {void}
+ */
+function completeAllTasks() {
+    tareas.forEach(tarea => {
+        tarea.completed = true;
+        const tareaElemento = taskList.querySelector(`.deberes[data-id="${tarea.id}"]`);
+        if (tareaElemento) tareaElemento.classList.add("completada");
+    });
+    saveTasksToStorage();
+    applyFilter();
+}
+
+document.getElementById("completeAllBtn").addEventListener("click", completeAllTasks);
 

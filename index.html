@@ -49,7 +49,11 @@
           <button id="addTaskBtn">Añadir</button>
         </section>
 
-        
+        <div id="acciones-globales">
+          <button id="completeAllBtn">✓ Completar todas</button>
+          <button id="deleteCompletedBtn">🗑 Borrar completadas</button>
+        </div>
+                
 <div id="filtro-estado">
   <button class="filtro-btn activo" data-filtro="todas">Todas</button>
   <button class="filtro-btn" data-filtro="pendientes">Pendientes</button>
@@ -72,6 +76,7 @@
         <span class="prioridad"></span>
         <button class="completeBtn">✓ Completar</button>
         <button class="deleteBtn">Eliminar</button>
+        <button class="editBtn">✏️ Editar</button>
       </div>
     </template>
     <script src="app.js"></script>

@@ -373,3 +373,24 @@ function completeAllTasks() {
 
 document.getElementById("completeAllBtn").addEventListener("click", completeAllTasks);
 
+/**
+ * Elimina todas las tareas completadas del array y del DOM,
+ * y actualiza localStorage.
+ *
+ * @returns {void}
+ */
+function deleteCompletedTasks() {
+    tareas
+        .filter(tarea => tarea.completed)
+        .forEach(tarea => {
+            const tareaElemento = taskList.querySelector(`.deberes[data-id="${tarea.id}"]`);
+            if (tareaElemento) tareaElemento.remove();
+        });
+
+    tareas = tareas.filter(tarea => !tarea.completed);
+    saveTasksToStorage();
+}
+
+document.getElementById("deleteCompletedBtn").addEventListener("click", deleteCompletedTasks);
+
+

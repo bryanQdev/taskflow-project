@@ -13,6 +13,8 @@ const template = document.getElementById("tarea-template");
  * @property {string} text - Texto descriptivo de la tarea.
  * @property {string} prioridad - Nivel de prioridad asignado a la tarea
  *                                (por ejemplo: "baja", "media" o "alta").
+ * @property {boolean} completed - Indica si la tarea está completada.
+ * @property {string} createdAt - Fecha de creación en formato ISO 8601.
  */
 
 /** @type {Tarea[]} */
@@ -40,6 +42,8 @@ function normalizeTask(task) {
         id,
         text: String(task?.text ?? ""),
         prioridad: String(task?.prioridad ?? "media"),
+        completed: typeof task?.completed === "boolean" ? task.completed : false,
+        createdAt: typeof task?.createdAt === "string" && task.createdAt ? task.createdAt : new Date().toISOString(),
     };
 }
 
@@ -122,15 +126,18 @@ function addTask(){
     }
 
     /** @type {Tarea} */
-    const tarea = { id: crypto.randomUUID(), text: text, prioridad: prioridadSeleccionada };
+    const tarea = {
+        id: crypto.randomUUID(),
+        text: text,
+        prioridad: prioridadSeleccionada,
+        completed: false,
+        createdAt: new Date().toISOString(),
+    };
+    tareas.push(tarea);        // 1. Añadir al array en memoria
+    saveTasksToStorage();      // 2. Persistir en localStorage
+    renderTask(tarea);         // 3. Mostrar en el DOM
 
-    tareas.push(tarea);
-
-    saveTasksToStorage();
-
-    renderTask(tarea);
-
-    input.value = "";
+    input.value = "";          // Opcional pero recomendable: limpiar el input
 }
 
 

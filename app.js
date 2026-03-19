@@ -5,6 +5,7 @@ const taskList = document.getElementById("taskList");
 const prioridadBtns = document.querySelectorAll(".prioridad-btn");
 const searchInput = document.getElementById("searchInput");
 const template = document.getElementById("tarea-template");
+let filtroActivo = "todas";
 
 
 /**
@@ -87,6 +88,35 @@ prioridadBtns.forEach(btn => {
 prioridadBtns.forEach((btn) => {
     if (btn.dataset.prioridad === prioridadSeleccionada) btn.classList.add("activo");
 });
+
+//  Seleccionamos los botones de filtro
+const filtroBtns = document.querySelectorAll(".filtro-btn");
+filtroBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        filtroBtns.forEach(b => b.classList.remove("activo"));
+        btn.classList.add("activo");
+        filtroActivo = btn.dataset.filtro;
+        applyFilter();
+    });
+});
+
+
+function applyFilter() {
+    const tareasDOM = taskList.querySelectorAll(".deberes");
+
+    tareasDOM.forEach(tareaElemento => {
+        const id = tareaElemento.dataset.id;
+        const tarea = tareas.find(t => t.id === id);
+        if (!tarea) return;
+
+        const visible =
+            filtroActivo === "todas" ||
+            (filtroActivo === "pendientes" && !tarea.completed) ||
+            (filtroActivo === "completadas" && tarea.completed);
+
+        tareaElemento.style.display = visible ? "flex" : "none";
+    });
+}
 
 
 //Agregamos el evento al boton añadir tarea
@@ -223,6 +253,7 @@ function toggleTask(id, tareaElemento) {
     tarea.completed = !tarea.completed;
     tareaElemento.classList.toggle("completada", tarea.completed);
     saveTasksToStorage();
+    applyFilter();
 }
        
 

@@ -297,3 +297,36 @@ footer{
     border-color: var(--color-low);
     color: var(--color-low);
 }
+
+/* Contenedor de botones de filtro */
+#filtro-estado {
+    display: flex;
+    gap: 8px;
+    margin-bottom: var(--spacing);
+  }
+  
+  /* Botón base */
+  .filtro-btn {
+    padding: 6px 16px;
+    border: 2px solid var(--color-border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.9em;
+    font-family: var(--font-main);
+    transition: all var(--transition);
+  }
+  
+  /* Hover */
+  .filtro-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  
+  /* Botón activo */
+  .filtro-btn.activo {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+  }

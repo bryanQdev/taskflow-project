@@ -194,15 +194,36 @@ loadTasksFromStorage();
         const tareaElemento = clone.querySelector(".deberes");
         tareaElemento.dataset.id = tarea.id;
 
+        const toggleBtn = clone.querySelector(".completeBtn"); // ✅ coincide con el HTML
+toggleBtn.addEventListener("click", function () {
+    toggleTask(tarea.id, tareaElemento);
+});
+
         const deleteBtn = clone.querySelector(".deleteBtn");
         deleteBtn.addEventListener("click", function(){
             tareaElemento.remove();
             removeTaskFromArray(tarea.id);
+
         });
 
         taskList.appendChild(clone);
     }
 
+    /**
+ * Alterna el estado completed de una tarea y actualiza el DOM y localStorage.
+ *
+ * @param {string} id - Id de la tarea a alternar.
+ * @param {HTMLElement} tareaElemento - Elemento del DOM que representa la tarea.
+ * @returns {void}
+ */
+function toggleTask(id, tareaElemento) {
+    const tarea = tareas.find(task => task.id === id);
+    if (!tarea) return;
+
+    tarea.completed = !tarea.completed;
+    tareaElemento.classList.toggle("completada", tarea.completed);
+    saveTasksToStorage();
+}
        
 
     

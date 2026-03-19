@@ -349,7 +349,7 @@ footer{
   .input-edicion--error {
     border-color: var(--color-high);
   }
-  
+
   /*---BOTON EDITAR----*/
 .editBtn {
     background: transparent;
@@ -367,4 +367,36 @@ footer{
     background: rgba(79, 70, 229, 0.1);
     border-color: var(--color-primary);
     color: var(--color-primary);
+}
+
+/*---ACCIONES GLOBALES---*/
+#acciones-globales {
+    display: flex;
+    gap: 8px;
+    margin-bottom: var(--spacing);
+}
+
+#completeAllBtn,
+#deleteCompletedBtn {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    color: var(--color-muted);
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#completeAllBtn:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-low);
+    color: var(--color-low);
+}
+
+#deleteCompletedBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--color-high);
+    color: var(--color-high);
 }

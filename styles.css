@@ -146,3 +146,8 @@ footer{
 .dark #estadisticas span {
     color: #818cf8;
 }
+/* Foco visible para accesibilidad */
+:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}

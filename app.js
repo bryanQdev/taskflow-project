@@ -53,6 +53,33 @@ function normalizeTask(task) {
 
 searchInput.addEventListener("input", filterTask);
 
+// Botones de prioridad
+prioridadBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        prioridadBtns.forEach(b => {
+            b.classList.remove("bg-indigo-600", "text-white", "border-indigo-600");
+            b.classList.add("bg-gray-100", "dark:bg-gray-700", "text-gray-400");
+        });
+        btn.classList.remove("bg-gray-100", "dark:bg-gray-700", "text-gray-400", "border-indigo-600");
+        btn.classList.add("bg-indigo-600", "text-white", "border-indigo-600");
+        prioridadSeleccionada = btn.dataset.prioridad;
+    });
+});
+
+// Marcamos la prioridad por defecto ("media") en la UI
+prioridadBtns.forEach(btn => {
+    if (btn.dataset.prioridad === prioridadSeleccionada) {
+        btn.classList.remove("bg-gray-100", "dark:bg-gray-700", "text-gray-400");
+        btn.classList.add("bg-indigo-600", "text-white", "border-indigo-600");
+    } else {
+        btn.classList.add("bg-gray-100", "dark:bg-gray-700", "text-gray-400"); // ✅ inicializa inactivos
+    }
+});
+
+
+
+
+
 /**
  * Filtra las tareas visibles en la lista según el texto introducido
  * en el campo de búsqueda, mostrando solo las que coinciden parcial
@@ -75,26 +102,19 @@ function filterTask() {
 
 
 
-//Agregamos eventos a los botones de prioridad
-prioridadBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        prioridadBtns.forEach(b => b.classList.remove("activo"));
-        btn.classList.add("activo");
-        prioridadSeleccionada = btn.dataset.prioridad;
-    });
-});
 
-// Marcamos la prioridad por defecto ("media") en la UI
-prioridadBtns.forEach((btn) => {
-    if (btn.dataset.prioridad === prioridadSeleccionada) btn.classList.add("activo");
-});
+
 
 //  Seleccionamos los botones de filtro
 const filtroBtns = document.querySelectorAll(".filtro-btn");
 filtroBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-        filtroBtns.forEach(b => b.classList.remove("activo"));
-        btn.classList.add("activo");
+        filtroBtns.forEach(b => {b.classList.remove("bg-indigo-600", "text-white", "border-indigo-600");
+            b.classList.add("border-gray-200", "dark:border-gray-600","text-gray-800", "dark:text-gray-100");});
+
+            btn.classList.remove("border-gray-200", "dark:border-gray-600","text-gray-800", "dark:text-gray-100");
+            btn.classList.add("bg-indigo-600", "text-white", "border-indigo-600" );
+
         filtroActivo = btn.dataset.filtro;
         applyFilter();
     });
@@ -397,3 +417,19 @@ function deleteCompletedTasks() {
 document.getElementById("deleteCompletedBtn").addEventListener("click", deleteCompletedTasks);
 
 
+//Modo oscuro
+
+const darkModeBtn = document.getElementById("darkModeBtn");
+
+//Cargar preferencia guardada
+
+if(localStorage.getItem("darkMode")==="true"){
+    document.documentElement.classList.add("dark");
+    darkModeBtn.textContent = "☀️ Modo claro";
+}
+
+darkModeBtn.addEventListener("click", () =>{
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("darkMode", isDark);
+    darkModeBtn.textContent = isDark ? "☀️ Modo claro" : "🌙 Modo oscuro";
+});

@@ -1,5 +1,9 @@
 {
   "devDependencies": {
     "@biomejs/biome": "2.4.6"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^4.2.2"
   }
 }

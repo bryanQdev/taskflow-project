@@ -18,178 +18,14 @@
 
 }
 
-body{
-    background-color: var(--color-bg);
-    font-family: var(--font-main);
-    color: var(--color-text);
-    margin: 0;
-    width: 100%;
 
-}
-
-/*---------HEADER--------*/
-header{
-    background-color: var(--color-primary);
-    color: white;
-    padding: var(--spacing);
-    text-align: center;
-}
+  
 
 
-/*---------LAYOUT--------*/
-.container{
-    display: flex;
-    min-height: calc(100vh - 57px);
-}
 
 
-/*sidebar*/
-aside{
-    width: 220px;
-    background-color: var(--color-white);
-    border-right: 1px solid var(--color-border);
-    padding: 24px var(--spacing);
-
-}
-
-/*Main*/
-main{
-    flex: 1;
-    padding: 24px;
-
-}
 
 
-/*----SECCION CREAR TAREA----*/
-
-.crear-deberes{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    background: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: var(--spacing);
-    margin-bottom: 24px;
-}
-
-.crear-deberes input {
-    background: var(--color-bg);
-    flex: 1;
-    padding: 10px 14px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text);
-    font-family: var(--font-main);
-    font-size: 0.875rem;
-    outline: none;
-    transition: var(--transition);
-}
-
-
-.crear-deberes input:focus{
-    border-color: var(--color-primary);
-    background: var(--color-white);
-}
-
-.crear-deberes input::placeholder{
-    color: var(--color-muted);
-}
-
-#taskInput{
-    flex:1;
-    min-width:180px;
-}
-
-#searchInput{
-    
-    min-width: 180px;
-}
-
-
-/*-------BOTONES DE PRIORIDAD------*/
-#prioridad-btn{
-    display: flex;
-    gap: 6px;
-}
-
-.prioridad-btn{
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    color: var(--color-muted);
-    font-family: var(--font-main);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-
-.prioridad-btn:hover{
-    border-color: var(--color-primary);
-    color: var(--color-text);
-
-}
-
-.prioridad-btn.activo {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-
-}
-
-
-/***---BOTON AÑADIR----***/
-
-#addTaskBtn{
-    background: var(--color-primary);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: white;
-    font-family: var(--font-main);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#addTaskBtn:hover{
-    background: var(--color-primary-hover);
-}
-
-/*Lista de deberes*/
-
-.lista-de-deberes{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--color-white);
-    padding: var(--spacing);
-    margin-bottom: var(--spacing);
-    border-radius: var(--radius);
-    transition: var(--transition);
-    
-}
-
-.deberes {
-    background: var(--color-white);
-    padding: var(--spacing);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-    transition: var(--transition)   ;
-}
-
-/*Hover*/
-
-.deberes:hover {
-    transform: scale(1.02);
-
-}
 
 /*Prioridad*/
 
@@ -212,44 +48,7 @@ main{
 }
 
 
-/*---BOTON ELIMINAR----*/
-.deleteBtn{
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    color: var(--color-muted);
-    font-family: var(--font-main);
-    font-size:0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
 
-}
-
-.deleteBtn:hover{
-    background: rgba(239,68,68,0.1);
-    border-color: var(--color-high);
-    color: var(--color-high);
-}
-
-
-/*RESPONSIVE*/
-@media(max-width:768px){
-    .container{
-        flex-direction:column;
-    }
-    
-    aside{
-        width:100%;
-        border-right: none;
-        border-bottom: 1px solid var(--color-border);
-
-    }
-
-    #searchInput{
-        width: 100%;
-    }
-}
 
 
 /*---PIE DE PAGINA---*/
@@ -264,13 +63,7 @@ footer{
 }
 
 
-#mensaje-error-longitud {
-    width: 100%;
-    margin: 0;
-    padding: 0 4px;
-    font-size: 0.8rem;
-    color: var(--color-high);
-}
+
 
 
 /**--Marcar o desmarcar completados--**/
@@ -280,56 +73,8 @@ footer{
     text-decoration-color: red;
 }   
 
-.completeBtn {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    color: var(--color-muted);
-    font-family: var(--font-main);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
 
-.completeBtn:hover {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: var(--color-low);
-    color: var(--color-low);
-}
 
-/* Contenedor de botones de filtro */
-#filtro-estado {
-    display: flex;
-    gap: 8px;
-    margin-bottom: var(--spacing);
-  }
-  
-  /* Botón base */
-  .filtro-btn {
-    padding: 6px 16px;
-    border: 2px solid var(--color-border);
-    border-radius: 20px;
-    background: transparent;
-    color: var(--color-text);
-    cursor: pointer;
-    font-size: 0.9em;
-    font-family: var(--font-main);
-    transition: all var(--transition);
-  }
-  
-  /* Hover */
-  .filtro-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-  
-  /* Botón activo */
-  .filtro-btn.activo {
-    background: var(--color-primary);
-    color: var(--color-white);
-    border-color: var(--color-primary);
-  }
 
   
 
@@ -350,57 +95,8 @@ footer{
     border-color: var(--color-high);
   }
 
-  /*---BOTON EDITAR----*/
-.editBtn {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    color: var(--color-muted);
-    font-family: var(--font-main);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.editBtn:hover {
-    background: rgba(79, 70, 229, 0.1);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
+  
 /*---ACCIONES GLOBALES---*/
-#acciones-globales {
-    display: flex;
-    gap: 8px;
-    margin-bottom: var(--spacing);
-}
-
-#completeAllBtn,
-#deleteCompletedBtn {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 6px 14px;
-    color: var(--color-muted);
-    font-family: var(--font-main);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#completeAllBtn:hover {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: var(--color-low);
-    color: var(--color-low);
-}
-
-#deleteCompletedBtn:hover {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: var(--color-high);
-    color: var(--color-high);
-} 
-
 
 /*---ESTADÍSTICAS---*/
 #estadisticas {
@@ -426,4 +122,18 @@ footer{
 #estadisticas span {
     font-weight: 600;
     color: var(--color-primary);
+}
+
+
+.dark {
+    --color-border: #374151;
+
+
+}.dark #estadisticas li {
+    background: #374151;
+    color: #f3f4f6;
+}
+
+.dark #estadisticas span {
+    color: #818cf8;
 }

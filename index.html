@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="styles.css" />
     
   </head>
-  <body class="bg-gray-100 font-sans dark:bg-gray-900 text-gray-800 w-full m-0 dark:text-gray-100">
+  <body class="bg-gray-100 font-sans dark:bg-gray-900 text-gray-800 w-full m-0 dark:text-gray-100 flex flex-col min-h-screen">
     <header class="bg-indigo-600 text-white p-4 text-center relative">
       <h1 class="text-2xl font-bold">Mi app</h1>
       <button id="darkModeBtn" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-sm transition" aria-label="Activar modo oscuro">  🌙 Modo oscuro</button>
     </header>
 
-    <div class="flex flex-col md:flex-row min-h-screen">
-      <aside class="w-full md:w-56 bg-white border-b md:border-b-0 md:border-r dark:border-gray-600 border-gray-200 p-6 dark:bg-gray-800">
+    <div class="flex flex-col md:flex-row flex-1">
+      <aside class="w-full md:w-56 bg-white border-b md:border-b-0 md:border-r  dark:border-gray-700 border-gray-200 p-6 dark:bg-gray-800">
         <h2 class="text-lg font-semibold mb-2">Estadísticas</h2>
         <ul id="estadisticas">
           <li>Total: <span id="stat-total">0</span></li>
@@ -25,25 +25,25 @@
         </ul>
       </aside>
 
-      <main class="flex-1 p-6 dark:bg-gray-900">
-        <section class="flex flex-wrap gap-3 items-center bg-white border border-gray-200 rounded-xl p-4 mb-6 dark:bg-gray-800">
+      <main class="flex-1 p-6 dark:bg-gray-900 min-h-0">
+        <section class="flex flex-wrap gap-3 items-center bg-white border border-gray-200 rounded-xl p-4 mb-6 dark:bg-gray-800 dark:border-gray-700">
           <!-- Agregamos un input para escribir tareas -->
           <label for="taskInput" class="text-sm font-medium dark:text-gray-400 text-gray-700">Nueva tarea</label>
           <input
             type="text"
             id="taskInput"
             placeholder="Qué haremos ... ?"
-            class="flex-1 min-w-44 bg-gray-100 dark:bg-gray-600 dark:text-white placeholder-gray-300 py-2 px-3 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 focus:bg-white transition"
+            class="flex-1 min-w-44 bg-gray-100 dark:bg-gray-600 dark:text-white placeholder-gray-400 py-2 px-3 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 focus:bg-white transition"
             
           />
-          <p id="mensaje-error-longitud" style="display:none;" class="w-full text-sm text-red-500 px-1">
+          <p id="mensaje-error-longitud" style="display:none;" class="order-last w-full text-sm text-red-500 px-1">
             La tarea debe tener al menos 3 caracteres.
           </p>
           
 
           <!-- Agregamos un input para buscar tareas -->
           <label for="searchInput" class="text-sm font-medium text-gray-700 dark:text-gray-400">Buscar tarea</label>
-          <input type="text" id="searchInput" placeholder="Buscar tarea..." class="min-w-44 dark:bg-gray-600 bg-gray-100 px-3 py-2 placeholder-gray-300 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 focus:bg-white transition"/>
+          <input type="text" id="searchInput" placeholder="Buscar tarea..." class="min-w-44 dark:bg-gray-600 bg-gray-100 px-3 py-2 placeholder-gray-400 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-600 focus:bg-white transition"/>
           
 
           <div id="prioridad-btn" class="flex gap-2">
@@ -65,6 +65,14 @@
   <button class="filtro-btn dark:border-gray-600 px-4 py-1.5 text-sm border-2 border-gray-200 rounded-full text-gray-800 cursor-pointer transition hover:border-indigo-600 hover:text-indigo-600 dark:text-gray-100" data-filtro="completadas">Completadas</button>
 </div>
 
+    <!--Filtro de ordenación-->
+
+<div class="flex gap-2 mb-4">
+  <button class="orden-btn dark:border-gray-600 activo px-4 py-1.5 text-sm border-2 border-gray-200 rounded-full text-gray-800 cursor-pointer transition hover:border-indigo-600 hover:text-indigo-600 dark:text-gray-100" data-orden="ninguno">Sin orden</button>
+  <button class="orden-btn dark:border-gray-600 px-4 py-1.5 text-sm border-2 border-gray-200 rounded-full text-gray-800 cursor-pointer transition hover:border-indigo-600 hover:text-indigo-600 dark:text-gray-100" data-orden="prioridad">↑ Prioridad</button>
+  <button class="orden-btn dark:border-gray-600 px-4 py-1.5 text-sm border-2 border-gray-200 rounded-full text-gray-800 cursor-pointer transition hover:border-indigo-600 hover:text-indigo-600 dark:text-gray-100" data-orden="fecha">↑ Fecha</button>
+</div>
+
 
         <section id="taskList" class="flex flex-col"></section>
       </main>
@@ -72,10 +80,10 @@
 
     <!-- PIE DE PAGINA-->
     <footer>
-      <p>MI app de tareas-2026</p>
+      <p>BryanQdev</p>
     </footer>
     <template id="tarea-template">
-      <div class="deberes flex items-center p-4 gap-3 bg-white dark:bg-gray-800 rounded-xl mb-2 transition hover:scale-[1.02]">
+      <div class="deberes flex items-center dark:border-gray-700 p-4 gap-3 bg-white dark:bg-gray-800 rounded-xl mb-2 transition hover:scale-[1.02]">
         <h2 class="tarea-texto flex-1 text-base dark:text-gray-100 font-medium text-gray-800"></h2>
         <span class="prioridad text-xs px-3 py-1 rounded-full text-black"></span>
         <button class="completeBtn px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-400 cursor-pointer transition hover:bg-green-50 hover:border-green-500 hover:text-green-500">✓ Completar</button>

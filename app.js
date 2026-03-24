@@ -142,6 +142,9 @@ function applyFilter() {
 //Agregamos el evento al boton añadir tarea
 
 button.addEventListener("click", addTask);
+input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addTask();
+});
 /**
  * Crea una nueva tarea a partir del input, valida longitud, actualiza el estado
  * en memoria, persiste en localStorage y renderiza en el DOM.
@@ -191,7 +194,52 @@ function addTask(){
     updateStats();             // 4. Actualizar estadísticas
 }
 
+// Orden de prioridad para comparar
+const ordenPrioridad = { alta: 1, media: 2, baja: 3 };
+let ordenActivo = null;
 
+const ordenBtns = document.querySelectorAll(".orden-btn");
+
+ordenBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        // Si ya estaba activo, lo desactivamos
+        if (ordenActivo === btn.dataset.orden) {
+            ordenActivo = null;
+            ordenBtns.forEach(b => {
+                b.classList.remove("bg-indigo-600", "text-white", "border-indigo-600");
+            });
+            rerenderTareas();
+            return;
+        }
+
+        ordenBtns.forEach(b => {
+            b.classList.remove("bg-indigo-600", "text-white", "border-indigo-600");
+        });
+        btn.classList.add("bg-indigo-600", "text-white", "border-indigo-600");
+        ordenActivo = btn.dataset.orden;
+        rerenderTareas();
+    });
+});
+
+/**
+ * Limpia el DOM y vuelve a renderizar las tareas según el orden activo.
+ *
+ * @returns {void}
+ */
+function rerenderTareas() {
+    taskList.innerHTML = "";
+
+    let tareasOrdenadas = [...tareas];
+
+    if (ordenActivo === "prioridad") {
+        tareasOrdenadas.sort((a, b) => ordenPrioridad[a.prioridad] - ordenPrioridad[b.prioridad]);
+    } else if (ordenActivo === "fecha") {
+        tareasOrdenadas.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    tareasOrdenadas.forEach(tarea => renderTask(tarea));
+    applyFilter();
+}
 
 
     
@@ -305,7 +353,7 @@ function editTask(id, tareaElemento) {
     const inputEdicion = document.createElement("input");
     inputEdicion.type = "text";
     inputEdicion.value = textoActual;
-    inputEdicion.classList.add("input-edicion");
+    inputEdicion.classList.add("input-edicion", "flex-1","dark:text-white", "dark:bg-gray-900");
     h2.replaceWith(inputEdicion);
     inputEdicion.focus();
 
@@ -322,7 +370,7 @@ function editTask(id, tareaElemento) {
         saveTasksToStorage();
 
         const nuevoH2 = document.createElement("h2");
-        nuevoH2.classList.add("tarea-texto");
+        nuevoH2.classList.add("tarea-texto","flex-1", "text-base", "dark:text-gray-100", "font-medium","text-gray-800");
         nuevoH2.textContent = nuevoTexto;
         inputEdicion.replaceWith(nuevoH2);
         updateStats();

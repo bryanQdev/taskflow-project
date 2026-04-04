@@ -1,4 +1,4 @@
-const API_URL = 'https://taskflow-project-8luk.vercel.app/';
+const API_URL = 'https://taskflow-project-8luk.vercel.app/api/v1/tasks';
 
 /**
  * Obtiene todas las tareas del servidor.

@@ -41,8 +41,11 @@ app.use((err, req, res, next) => {
 });
 
 
-//Arrancamos el servidor
+//Arrancamos el servidor en local
 app.listen(PORT, ()=>{
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 
 });
+
+// Exportamos para Vercel
+module.exports = app;

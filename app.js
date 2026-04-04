@@ -7,6 +7,25 @@ const searchInput = document.getElementById("searchInput");
 const template = document.getElementById("tarea-template");
 let filtroActivo = "todas";
 
+// Referencias a los estados de red
+const estadoCargando = document.getElementById("estado-cargando");
+const estadoError = document.getElementById("estado-error");
+const estadoVacio = document.getElementById("estado-vacio");
+
+/**
+ * Muestra u oculta los estados de la UI según la situación de red.
+ * @param {'cargando'|'error'|'vacio'|'normal'} estado
+ */
+function setEstado(estado) {
+    estadoCargando.classList.add("hidden");
+    estadoError.classList.add("hidden");
+    estadoVacio.classList.add("hidden");
+
+    if (estado === "cargando") estadoCargando.classList.remove("hidden");
+    if (estado === "error") estadoError.classList.remove("hidden");
+    if (estado === "vacio") estadoVacio.classList.remove("hidden");
+}
+
 
 /**
  * @typedef {Object} Tarea
@@ -22,31 +41,9 @@ let filtroActivo = "todas";
 let tareas = [];
 let prioridadSeleccionada = "media"; //Valor por defecto
 
-/**
- * Persiste el arreglo `tareas` en localStorage.
- *
- * @returns {void}
- */
-function saveTasksToStorage() {
-    localStorage.setItem("tareas", JSON.stringify(tareas));
-}
 
-/**
- * Normaliza tareas cargadas (por ejemplo, versiones antiguas sin `id`).
- *
- * @param {any} task
- * @returns {Tarea}
- */
-function normalizeTask(task) {
-    const id = typeof task?.id === "string" && task.id.trim() ? task.id : crypto.randomUUID();
-    return {
-        id,
-        text: String(task?.text ?? ""),
-        prioridad: String(task?.prioridad ?? "media"),
-        completed: typeof task?.completed === "boolean" ? task.completed : false,
-        createdAt: typeof task?.createdAt === "string" && task.createdAt ? task.createdAt : new Date().toISOString(),
-    };
-}
+
+
 
 
 //Cada vez que el usuario escribe, filtramos.   
@@ -162,12 +159,8 @@ function validarLongitudTarea(texto) {
     return texto.trim().length >= 3;
 }
 
-/**
- * Crea la tarea leyendo el input y muestra/oculta el mensaje de error de longitud.
- *
- * @returns {void}
- */
-function addTask(){
+
+async function addTask(){
     const text = input.value;
     const mensajeError = document.getElementById("mensaje-error-longitud");
 
@@ -178,20 +171,20 @@ function addTask(){
         if(mensajeError) mensajeError.style.display = "none";
     }
 
-    /** @type {Tarea} */
-    const tarea = {
-        id: crypto.randomUUID(),
-        text: text,
-        prioridad: prioridadSeleccionada,
-        completed: false,
-        createdAt: new Date().toISOString(),
-    };
-    tareas.push(tarea);        // 1. Añadir al array en memoria
-    saveTasksToStorage();      // 2. Persistir en localStorage
-    renderTask(tarea);         // 3. Mostrar en el DOM
+    try {
+        const tarea = await createTask({
+            text: text.trim(),
+            prioridad: prioridadSeleccionada,
+        });
 
-    input.value = "";          // Opcional pero recomendable: limpiar el input
-    updateStats();             // 4. Actualizar estadísticas
+        tareas.push(tarea);
+        renderTask(tarea);
+        input.value = "";
+        updateStats();
+    } catch (error) {
+        console.error('Error al crear la tarea:', error);
+        alert(error.message);
+    }
 }
 
 // Orden de prioridad para comparar
@@ -245,32 +238,19 @@ function rerenderTareas() {
     
 
     
-//Cargar tareas desde localStorage al iniciar la aplicación
+// Carga las tareas desde el servidor al iniciar la aplicación
 /**
- * Carga las tareas desde localStorage y las renderiza al iniciar la app.
+ * Obtiene las tareas del servidor y las renderiza al iniciar la app.
  *
  * @returns {void}
  */
-function loadTasksFromStorage() {
-    const storedTasks = localStorage.getItem("tareas");
-    if (!storedTasks) return;
-
+async function loadTasksFromStorage() {
     try {
-        const parsed = JSON.parse(storedTasks);
-        if (!Array.isArray(parsed)) throw new Error("Formato inválido");
-
-        /** @type {Tarea[]} */
-        const normalized = parsed.map(normalizeTask);
-        tareas = normalized;
-        saveTasksToStorage(); // actualiza storage si faltaban ids
-
-        tareas.forEach((task) => {
-            renderTask(task);
-        });
-        updateStats(); // Actualizar estadísticas tras cargar tareas
-    } catch {
-        tareas = [];
-        saveTasksToStorage();
+        tareas = await getTasks();
+        tareas.forEach(task => renderTask(task));
+        updateStats();
+    } catch (error) {
+        console.error('Error al cargar las tareas:', error);
     }
 }
 
@@ -317,8 +297,7 @@ const editBtn = clone.querySelector(".editBtn");
     }
 
     /**
- * Alterna el estado completed de una tarea y actualiza el DOM y localStorage.
- *
+* Alterna el estado completed de una tarea y actualiza el DOM. *
  * @param {string} id - Id de la tarea a alternar.
  * @param {HTMLElement} tareaElemento - Elemento del DOM que representa la tarea.
  * @returns {void}
@@ -329,14 +308,14 @@ function toggleTask(id, tareaElemento) {
 
     tarea.completed = !tarea.completed;
     tareaElemento.classList.toggle("completada", tarea.completed);
-    saveTasksToStorage();
+    
     applyFilter();
     updateStats();
 }
 /**
  * Permite editar el título de una tarea existente.
  * Reemplaza el h2 por un input, y al confirmar actualiza
- * el array, el DOM y el localStorage.
+ * el array y el DOM.
  *
  * @param {string} id - Id de la tarea a editar.
  * @param {HTMLElement} tareaElemento - Elemento del DOM que representa la tarea.
@@ -367,7 +346,7 @@ function editTask(id, tareaElemento) {
         }
 
         tarea.text = nuevoTexto;
-        saveTasksToStorage();
+        
 
         const nuevoH2 = document.createElement("h2");
         nuevoH2.classList.add("tarea-texto","flex-1", "text-base", "dark:text-gray-100", "font-medium","text-gray-800");
@@ -395,16 +374,19 @@ function editTask(id, tareaElemento) {
     
 
     /**
-     * Elimina del arreglo de tareas la tarea cuyo texto coincide con el
-     * proporcionado y actualiza la información persistida en localStorage.
+     * Elimina la tarea del servidor y del arreglo en memoria.
      *
      * @param {string} id - Id de la tarea a eliminar.
      * @returns {void}
      */
-    const removeTaskFromArray = (id) => {
-        tareas = tareas.filter(task => task.id !== id);
-        saveTasksToStorage();
-        updateStats();
+    const removeTaskFromArray = async (id) => {
+        try {
+            await deleteTask(id);
+            tareas = tareas.filter(task => task.id !== id);
+            updateStats();
+        } catch (error) {
+            console.error('Error al eliminar la tarea:', error);
+        }
     };
 
 
@@ -423,10 +405,17 @@ function updateStats() {
     document.getElementById("stat-total").textContent = total;
     document.getElementById("stat-pendientes").textContent = pendientes;
     document.getElementById("stat-completadas").textContent = completadas;
+
+    // Mostrar estado vacío si no hay tareas
+    if (total === 0) {
+        setEstado("vacio");
+    } else {
+        setEstado("normal");
+    }
 }
 
 /**
- * Marca todas las tareas como completadas, actualiza el DOM y localStorage.
+ * Marca todas las tareas como completadas y actualiza el DOM.
  *
  * @returns {void}
  */
@@ -436,7 +425,6 @@ function completeAllTasks() {
         const tareaElemento = taskList.querySelector(`.deberes[data-id="${tarea.id}"]`);
         if (tareaElemento) tareaElemento.classList.add("completada");
     });
-    saveTasksToStorage();
     applyFilter();
     updateStats();
 }
@@ -458,7 +446,6 @@ function deleteCompletedTasks() {
         });
 
     tareas = tareas.filter(tarea => !tarea.completed);
-    saveTasksToStorage();
     updateStats();
 }
 

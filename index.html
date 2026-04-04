@@ -74,6 +74,24 @@
 </div>
 
 
+<!-- Estado de carga -->
+<div id="estado-cargando" class="hidden text-center py-8 text-gray-400 dark:text-gray-500">
+  <p class="text-sm">Cargando tareas...</p>
+</div>
+
+<!-- Estado de error -->
+<div id="estado-error" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-4">
+  <p class="text-sm text-red-600 dark:text-red-400">No se pudo conectar con el servidor. Comprueba tu conexión.</p>
+</div>
+
+<!-- Estado vacío -->
+<div id="estado-vacio" class="hidden text-center py-8 text-gray-400 dark:text-gray-500">
+  <p class="text-sm">No hay tareas todavía. ¡Añade una!</p>
+</div>
+
+<section id="taskList" class="flex flex-col"></section>
+
+
         <section id="taskList" class="flex flex-col"></section>
       </main>
     </div>
@@ -91,6 +109,7 @@
         <button class="editBtn px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-400 cursor-pointer transition hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-500" aria-label="Editar tarea">✏️ Editar</button>
       </div>
     </template>
+    <script src="src/api/client.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
